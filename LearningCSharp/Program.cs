@@ -3,6 +3,7 @@ using log4net.Config;
 using log4net.Repository.Hierarchy;
 using log4net.Util;
 using System;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -16,6 +17,7 @@ namespace LearningCSharp
         static void Main(string[] args)
         {
             InitializeLogConfiguration();
+            InitializeDb();
             Logger.Debug("This is our first debug log");
             Console.WriteLine("Hello World!");
         }
@@ -40,5 +42,30 @@ namespace LearningCSharp
                 Console.WriteLine($"Exception Message:{ex.Message}, Exception Detail:{ex.StackTrace}");
             }
         }
+
+        static void InitializeDb()
+        {
+            string connectionString;
+            SqlConnection _sqlConnection;
+            connectionString = "Data source=WAHAB-HUSSAIN\\SQLEXPRESS;Initial Catalog=tempdb;User id=sa;password=sa;";
+            _sqlConnection = new SqlConnection(connectionString);
+            _sqlConnection.Open();
+            SqlCommand _sqlCommand = new SqlCommand("select * from test;", _sqlConnection);
+            SqlDataReader _sqlDataReader = _sqlCommand.ExecuteReader();
+            int id;
+            string name;
+            if (_sqlDataReader.HasRows)
+            {
+                while (_sqlDataReader.Read())
+                {
+                    id = (int)_sqlDataReader[0];
+                    name = _sqlDataReader[1].ToString();
+                    Console.WriteLine($"id:{id} and name:{name}");
+                }
+            }
+            _sqlConnection.Close();
+
+        }
+
     }
 }
