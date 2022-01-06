@@ -2,6 +2,7 @@
 using log4net.Config;
 using log4net.Repository.Hierarchy;
 using log4net.Util;
+using StackExchange.Redis;
 using System;
 using System.Data.SqlClient;
 using System.IO;
@@ -16,8 +17,9 @@ namespace LearningCSharp
         private static string Log4netPath { get; set; }
         static void Main(string[] args)
         {
-            InitializeLogConfiguration();
-            InitializeDb();
+            //InitializeLogConfiguration(); //Log4net
+            //InitializeDb();
+            InitializeRedis();
             Logger.Debug("This is our first debug log");
             Console.WriteLine("Hello World!");
         }
@@ -66,6 +68,26 @@ namespace LearningCSharp
             _sqlConnection.Close();
 
         }
+
+        static void InitializeRedis()
+        {
+            ConfigurationOptions configurationOptions = new ConfigurationOptions();
+            configurationOptions.EndPoints.Add("127.0.0.1:6379");
+            configurationOptions.ClientName = "MyRedis";
+            configurationOptions.ConnectTimeout = 1 * 1000;
+            configurationOptions.SyncTimeout = 1 * 1000;
+            configurationOptions.AbortOnConnectFail = false;
+            configurationOptions.KeepAlive = 180;
+            configurationOptions.DefaultDatabase = 0;
+
+            var connection = ConnectionMultiplexer.Connect(configurationOptions);
+            var db = connection.GetDatabase();
+            var pong = db.Ping();
+            Console.WriteLine(pong);
+        
+        }
+
+        
 
     }
 }

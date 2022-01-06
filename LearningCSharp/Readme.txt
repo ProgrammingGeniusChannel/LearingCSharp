@@ -1,8 +1,8 @@
-﻿1. Logging Framework
+﻿1. Logging Framework  (DONE)
     Log4net
-2. Database connectivity
+2. Database connectivity  (DONE)
     Mysql
-3. Caching 
+3. Caching              
     Redis
 4. Common Utilies
     Encryption
